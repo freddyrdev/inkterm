@@ -1,2 +1,3 @@
-from .colors import InkTerm
+__version__ = "0.1.0"
 
+from .core import write as write
