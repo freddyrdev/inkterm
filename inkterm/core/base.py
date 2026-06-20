@@ -39,7 +39,7 @@ class InkTerm:
 
         prefix_found = self._get_prefix(prefix)
 
-        output = f"{prefix_found}{convert_color}{convert_bg}{all_styles}{self.default_text_color}{self.reset_ansi}"
+        output = f"{prefix_found}{convert_color}{convert_bg}{all_styles}{self.default_text_color}{self.reset_ansi} {text}"
 
         if payload: return output
         print(output)
