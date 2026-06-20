@@ -1,4 +1,4 @@
-from .utils import transform_formats
+from ..utils.transformer import transform_formats
 
 class InkTerm:
     def __init__(self):

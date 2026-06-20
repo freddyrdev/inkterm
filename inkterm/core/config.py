@@ -1,4 +1,4 @@
-from .core import _instance
+from .base import _instance
 
 def config(
     reset_color: bool = True,
