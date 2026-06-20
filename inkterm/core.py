@@ -20,8 +20,7 @@ class InkTerm:
         if prefix is not None: self.prefix = prefix
         if default_prefix is not None: self.default_prefix = default_prefix
 
-        self.reset_ansi = "\033[0m" if self.reset_color else ""
-        
+        self.reset_ansi = "\033[0m" if self.reset_color else ""    
 
     def write(
         self,
@@ -47,8 +46,7 @@ class InkTerm:
             
         if self.default_prefix: 
             return self.prefix[self.default_prefix]
-        
-        raise ValueError(f"The prefix '{prefix}' does not exist.")
+        return ""
 
     def label(self, 
         text: str, 
@@ -56,9 +54,9 @@ class InkTerm:
         background: str | tuple[int, int, int] = None,
     ):
         convert_color = transform_formats(color)
-        convert_bg = transform_formats(background)
+        convert_bg = transform_formats(background, True)
 
-        return convert_color + convert_bg + text
+        return convert_color + convert_bg + text + "\033[0m "
 
 _instance = InkTerm()
 
