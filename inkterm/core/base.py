@@ -1,5 +1,3 @@
-import re
-
 from ..utils.transformer import transform_formats
 
 class InkTerm:
