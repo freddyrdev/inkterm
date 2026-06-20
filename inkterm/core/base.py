@@ -1,3 +1,5 @@
+import re
+
 from ..utils.transformer import transform_formats
 
 class InkTerm:
@@ -7,7 +9,7 @@ class InkTerm:
         self.default_prefix = ""
         self.prefix = {}
         
-        self.reset_ansi = ""
+        self.reset_ansi = "\033[0m"
 
     def setup(self, 
         reset_color: bool = None, 
@@ -28,27 +30,28 @@ class InkTerm:
         prefix: str = None,
         color: str | tuple[int, int, int] = None, 
         background: str | tuple[int, int, int] = None,
-        styles: list = [],
+        styles: list = None,
         payload: bool = False,
     ) -> str | None:
-        all_styles = self._use_formats(styles)
-        prefix_found = self._get_prefix(prefix)
+        styles_list = styles or []
+
+        all_styles = self._use_formats(styles_list)
         convert_color = transform_formats(color)
         convert_bg = transform_formats(background, True)
 
-        output = prefix_found + convert_color + convert_bg + all_styles + text + self.reset_ansi
+        prefix_found = self._get_prefix(prefix)
+
+        output = f"{prefix_found}{convert_color}{convert_bg}{all_styles}{self.default_text_color}{self.reset_ansi}"
 
         if payload: return output
         print(output)
 
     def _get_prefix(self, prefix: str) -> str:
-        for key, value in self.prefix.items():
-            if key == prefix:
-                return value
-            
-        if self.default_prefix: 
-            return self.prefix[self.default_prefix]
-        return ""
+        if prefix is not None:
+            return self.prefix.get(prefix, "")
+        
+        if self.default_prefix:
+            return self.prefix.get(self.default_prefix, "")
 
     def label(self, 
         text: str, 
@@ -56,19 +59,16 @@ class InkTerm:
         color: str | tuple[int, int, int] = None,
         background: str | tuple[int, int, int] = None,
     ):
-        all_styles = self._use_formats(styles)
+        styles_list = styles or []
+
+        all_styles = self._use_formats(styles_list)
         convert_color = transform_formats(color)
         convert_bg = transform_formats(background, True)
 
-        return convert_color + convert_bg + all_styles + text + "\033[0m "
+        return f"{convert_color}{convert_bg}{all_styles}{text}\033[0m"
 
     def _use_formats(self, styles: list) -> str:
-        final_styles = ""
-
-        for style in styles:
-            final_styles += style.value
-
-        return final_styles
+        return "".join(style.value for style in styles)
 
 _instance = InkTerm()
 
