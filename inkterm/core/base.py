@@ -37,19 +37,19 @@ class InkTerm:
         convert_color = transform_formats(color)
         convert_bg = transform_formats(background, True)
 
-        prefix_found = self._get_prefix(prefix)
+        prefix_found = self._get_prefix(prefix) or ""
 
-        output = f"{prefix_found}{convert_color}{convert_bg}{all_styles}{self.default_text_color}{self.reset_ansi} {text}"
+        output = f"{prefix_found}{convert_color}{convert_bg}{all_styles}{self.reset_ansi}{self.default_text_color}{text}{self.reset_ansi}"
 
         if payload: return output
         print(output)
 
     def _get_prefix(self, prefix: str) -> str:
         if prefix is not None:
-            return self.prefix.get(prefix, "")
+            return self.prefix.get(prefix, "") + " "
         
         if self.default_prefix:
-            return self.prefix.get(self.default_prefix, "")
+            return self.prefix.get(self.default_prefix, "") + " "
 
     def label(self, 
         text: str, 
